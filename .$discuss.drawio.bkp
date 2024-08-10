@@ -1,0 +1,96 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.5 Chrome/126.0.6478.183 Electron/31.3.0 Safari/537.36" version="24.7.5" pages="2">
+  <diagram name="ページ1" id="xvVdIRog7PmbJLj2ePAR">
+    <mxGraphModel dx="954" dy="674" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3ITkiS2WBrww64WNPZgR-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="80" width="600" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="3ITkiS2WBrww64WNPZgR-2" value="アップロード" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="110" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3ITkiS2WBrww64WNPZgR-3" value="音楽" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="160" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3ITkiS2WBrww64WNPZgR-4" value="変換" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3ITkiS2WBrww64WNPZgR-5" value="結果表示" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="220" width="540" height="150" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="7URmht15TYYmDFyYCu7l" name="ページ2">
+    <mxGraphModel dx="734" dy="518" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="40" width="880" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="Tk2mRhiA3AZQAzDpI0fe-2" target="Tk2mRhiA3AZQAzDpI0fe-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Tk2mRhiA3AZQAzDpI0fe-16" target="Tk2mRhiA3AZQAzDpI0fe-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-2" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.devopsschool.com/blog/wp-content/uploads/2022/03/java_logo_icon_168609.png;" vertex="1" parent="1">
+          <mxGeometry x="440" y="129.2" width="162.82" height="81.41" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Tk2mRhiA3AZQAzDpI0fe-3" target="Tk2mRhiA3AZQAzDpI0fe-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="Tk2mRhiA3AZQAzDpI0fe-3" target="Tk2mRhiA3AZQAzDpI0fe-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-3" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://test-hack.com/wp-content/uploads/2022/04/9d0a6780-394a-11eb-9fd1-6296a684b124.jpeg;" vertex="1" parent="1">
+          <mxGeometry x="280" y="210.61" width="113.04" height="62.64" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-4" value="Google Compute" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="80" y="40" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="Tk2mRhiA3AZQAzDpI0fe-7" target="Tk2mRhiA3AZQAzDpI0fe-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-7" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.shutterstock.com/shutterstock/photos/701307613/display_1500/stock-vector-music-notes-song-melody-or-tune-flat-vector-icon-for-musical-apps-and-websites-701307613.jpg;clipPath=inset(4.14% 3.33% 11.72% 3.67%);" vertex="1" parent="1">
+          <mxGeometry x="120" y="120" width="114.14" height="99.82" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-10" value="Sentiment Analysis&lt;div&gt;1. Google Service?&lt;/div&gt;&lt;div&gt;2.Audio / Text&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="49.81" width="120" height="79.39" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Tk2mRhiA3AZQAzDpI0fe-11" target="Tk2mRhiA3AZQAzDpI0fe-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Tk2mRhiA3AZQAzDpI0fe-11" target="Tk2mRhiA3AZQAzDpI0fe-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-11" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://miro.medium.com/v2/resize:fit:1400/1*-V47O9e3T_LxR3P-lcpR0g.png;" vertex="1" parent="1">
+          <mxGeometry x="640" y="79.99999999999997" width="170" height="88.26" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-12" value="Features:&lt;div&gt;1. 内容(関係者、背景、物語...)&lt;/div&gt;&lt;div&gt;→Lyricsから&lt;/div&gt;&lt;div&gt;2. 感情&lt;/div&gt;&lt;div&gt;→Rhysmから&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="730" y="170.52" width="190" height="110.18" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-13" value="歌词" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="210.60999999999999" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-16" value="旋律风格" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="250" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-20" value="？" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="680" y="241" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="Tk2mRhiA3AZQAzDpI0fe-21" target="Tk2mRhiA3AZQAzDpI0fe-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-21" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.simpleocr.com/wp-content/uploads/2022/04/google_vision_cloud_ocr_api.jpg;" vertex="1" parent="1">
+          <mxGeometry x="640" y="280" width="152.44" height="105.95" as="geometry" />
+        </mxCell>
+        <mxCell id="Tk2mRhiA3AZQAzDpI0fe-25" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.container_registry_image;" vertex="1" parent="1">
+          <mxGeometry x="136.53" y="320" width="81.07" height="81.07" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
