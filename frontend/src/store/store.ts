@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import MusicReducer from "../store/modules/music.ts";
+import MusicReducer from "./modules/music.ts";
+import {useDispatch} from "react-redux";
 // ...
 
 const store = configureStore({
@@ -8,9 +9,8 @@ const store = configureStore({
   },
 })
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch
+export const useAppDispatch: () => AppDispatch = useDispatch
 
 export default store

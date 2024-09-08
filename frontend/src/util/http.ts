@@ -1,38 +1,75 @@
+/**
+ * this file is used to handle request and response.
+ */
+
 import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const API_URL = 'http://localhost:8080/api';
+export type Response = {
+  success: boolean;
+  msg: string;
+  status: number;
+  data: { [key: string]: any };
+};
 
 const instance = axios.create({
-    baseURL: API_URL,
-    timeout: 100000,
+  baseURL: import.meta.env.VITE_BASE_URL,
+  timeout: 100000,
 });
 
+instance.interceptors.response.use(
+  function (response) {
+    if (response.status == 200) {
+      return response.data;
+    }
+
+    if (response.data.status) {
+      handleStatus(response.data.status);
+    } else {
+      handleStatus(response.status);
+    }
+
+    return Promise.reject(response.data.msg);
+  },
+  function (error) {
+    handleStatus(error.response.status);
+    return Promise.reject(error);
+  }
+);
+
+function handleStatus(status: number) {
+}
+
 export interface Data {
-    [index: string]: unknown;
+  [index: string]: unknown;
 }
 
 interface Http {
-    get: (
-      url: string,
-      data?: Data,
-      config?: AxiosRequestConfig
-    ) => Promise<AxiosResponse>;
-    post: (
-      url: string,
-      data?: Data,
-      config?: AxiosRequestConfig
-    ) => Promise<AxiosResponse>;
-    put: (
-      url: string,
-      data?: Data,
-      config?: AxiosRequestConfig
-    ) => Promise<AxiosResponse>;
-    delete: (
-      url: string,
-      data?: Data,
-      config?: AxiosRequestConfig
-    ) => Promise<AxiosResponse>;
+  get: (
+    url: string,
+    data?: Data,
+    config?: AxiosRequestConfig
+  ) => Promise<Response>;
+  post: (
+    url: string,
+    data?: Data,
+    config?: AxiosRequestConfig
+  ) => Promise<Response>;
+  put: (
+    url: string,
+    data?: Data,
+    config?: AxiosRequestConfig
+  ) => Promise<Response>;
+  patch: (
+    url: string,
+    data?: Data,
+    config?: AxiosRequestConfig
+  ) => Promise<Response>;
+  delete: (
+    url: string,
+    data?: Data,
+    config?: AxiosRequestConfig
+  ) => Promise<AxiosResponse>;
 }
 
 const http: Http = {
@@ -48,12 +85,15 @@ const http: Http = {
   put(url, data, config) {
     return instance.put(url, data, config as AxiosRequestConfig);
   },
+  patch(url, data, config) {
+    return instance.patch(url, data, config as AxiosRequestConfig);
+  },
   delete(url, data, config) {
     return instance.delete(url, {
       data,
       ...config,
-    }  as AxiosRequestConfig);
-  }
-};
+    } as AxiosRequestConfig);
+  },
+} as Http;
 
 export default http;

@@ -1,13 +1,12 @@
 import http from "../../util/http";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { MusicState } from "../../model/state/MusicStateModel";
-import type {AxiosResponse} from "axios";
 
 // 异步获取音乐信息
 export const fetchMusic = createAsyncThunk(
   'music/fetchMusic',
   async (payload: { id: string }) => {
-    const response = await http.get(`/music/test`, { params: payload });
+    const response = await http.get(`/music/test`, payload);
     return response.data;
   }
 )
@@ -32,7 +31,7 @@ export const MusicSlice = createSlice({
       })
       // You can chain calls, or have separate `builder.addCase()` lines each time
       .addCase(fetchMusic.fulfilled, (state: MusicState, {payload}) => {
-        state.message = (payload as AxiosResponse).data;
+        state.message = payload.message
       })
   },
 })
