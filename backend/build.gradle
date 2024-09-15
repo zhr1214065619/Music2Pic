@@ -30,6 +30,20 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // This dependency is used by the application.
+    implementation 'dev.langchain4j:langchain4j:0.34.0'
+    implementation 'dev.langchain4j:langchain4j-vertex-ai:0.34.0'
+    implementation 'dev.langchain4j:langchain4j-vertex-ai-gemini:0.34.0'
+    implementation 'dev.langchain4j:langchain4j-document-parser-apache-pdfbox:0.34.0'
+
+    // Gemma via Ollama and TestContainers
+    implementation 'dev.langchain4j:langchain4j-ollama:0.34.0'
+    implementation 'org.testcontainers:ollama:1.19.8'
+
+    implementation platform('com.google.cloud:libraries-bom:26.45.0')
+
+    implementation 'com.google.cloud:google-cloud-storage'
 }
 
 tasks.named('test') {

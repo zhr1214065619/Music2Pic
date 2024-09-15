@@ -6,3 +6,10 @@ spring:
   mvc:
     servlet:
       path: /api
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+google:
+  bucketName: audio-bucket-for-music2pic-20240914
