@@ -39,6 +39,7 @@ dependencies {
 
     // Gemma via Ollama and TestContainers
     implementation 'dev.langchain4j:langchain4j-ollama:0.34.0'
+    // https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-vertex-ai
     implementation 'org.testcontainers:ollama:1.19.8'
 
     implementation platform('com.google.cloud:libraries-bom:26.45.0')

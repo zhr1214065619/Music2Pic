@@ -12,4 +12,8 @@ spring:
       max-request-size: 50MB
 
 google:
-  bucketName: audio-bucket-for-music2pic-20240914
+  normal:
+    location: us-central1
+    projectId: music2pic
+  storage:
+    bucketName: audio-bucket-for-music2pic-20240914

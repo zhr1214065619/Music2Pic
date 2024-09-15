@@ -1,6 +1,7 @@
 package com.music2pic.backend.controller;
 
 import com.music2pic.backend.dto.ResponseBody;
+import java.io.IOException;
 import org.springframework.core.io.Resource;
 import com.music2pic.backend.dto.music.Music2TextOutDto;
 import com.music2pic.backend.dto.music.SaveMusicOutDto;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,18 +37,21 @@ public class MusicController {
     return ResponseEntity.ok(ResponseBody.ok(music2TextOutDto));
   }
 
-  @GetMapping("/text2Image")
-  public ResponseEntity<Resource> downloadImage(@RequestParam String filePath) {
-    Resource resource = null;
-    if (resource.exists() && resource.isReadable()) {
-      return ResponseEntity.ok()
-                           .contentType(
-                               MediaType.IMAGE_JPEG)  // You might need to adjust the content type based on the file type
-                           .header(
-                               HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                           .body(resource);
-    } else {
+  @PostMapping("/text2Image")
+  public ResponseEntity<Resource> downloadImage(@RequestBody Music2TextOutDto requestDto) {
+    try {
+      Resource resource = musicService.generateImage(requestDto);
+      if (resource.exists() && resource.isReadable()) {
+        return ResponseEntity.ok()
+                             .contentType(
+                                 MediaType.IMAGE_JPEG)  // You might need to adjust the content type based on the file type
+                             .header(
+                                 HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                             .body(resource);
+      }
+    } catch (IOException e) {
       return ResponseEntity.notFound().build();
     }
+    return ResponseEntity.notFound().build();
   }
 }
