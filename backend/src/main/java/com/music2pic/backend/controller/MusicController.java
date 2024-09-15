@@ -1,9 +1,9 @@
 package com.music2pic.backend.controller;
 
 import com.music2pic.backend.dto.ResponseBody;
+import com.music2pic.backend.dto.music.Convert2TextOutDto;
 import java.io.IOException;
 import org.springframework.core.io.Resource;
-import com.music2pic.backend.dto.music.Music2TextOutDto;
 import com.music2pic.backend.dto.music.SaveMusicOutDto;
 import com.music2pic.backend.service.MusicService;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +33,12 @@ public class MusicController {
 
   @PostMapping("/convert2Text")
   public ResponseEntity<Object> convert2Text(@RequestParam("fileId") String fileId) {
-    Music2TextOutDto music2TextOutDto = musicService.convert2Text(fileId);
-    return ResponseEntity.ok(ResponseBody.ok(music2TextOutDto));
+    Convert2TextOutDto convert2TextOutDto = musicService.convert2Text(fileId);
+    return ResponseEntity.ok(ResponseBody.ok(convert2TextOutDto));
   }
 
   @PostMapping("/text2Image")
-  public ResponseEntity<Resource> downloadImage(@RequestBody Music2TextOutDto requestDto) {
+  public ResponseEntity<Resource> downloadImage(@RequestBody Convert2TextOutDto requestDto) {
     try {
       Resource resource = musicService.generateImage(requestDto);
       if (resource.exists() && resource.isReadable()) {

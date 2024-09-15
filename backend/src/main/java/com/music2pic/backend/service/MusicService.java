@@ -15,7 +15,7 @@ import com.google.protobuf.Value;
 import com.google.protobuf.util.JsonFormat;
 import com.music2pic.backend.common.configuration.NormalConfig;
 import com.music2pic.backend.common.configuration.StorageConfig;
-import com.music2pic.backend.dto.music.Music2TextOutDto;
+import com.music2pic.backend.dto.music.Convert2TextOutDto;
 import com.music2pic.backend.dto.music.SaveMusicOutDto;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.AudioContent;
@@ -73,8 +73,8 @@ public class MusicService {
     return saveMusicOutDto;
   }
 
-  public Music2TextOutDto convert2Text(String fileId) {
-    Music2TextOutDto music2TextOutDto = new Music2TextOutDto();
+  public Convert2TextOutDto convert2Text(String fileId) {
+    Convert2TextOutDto convert2TextOutDto = new Convert2TextOutDto();
     // Initialize the storage client
     Storage storage = StorageOptions.getDefaultInstance().getService();
 
@@ -102,15 +102,15 @@ public class MusicService {
       Response<AiMessage> response = model.generate(userMessage);
       System.out.println("Transcribed Text:");
       System.out.println(response.content().text());
-      music2TextOutDto.setText(response.content().text());
-      return music2TextOutDto;
+      convert2TextOutDto.setText(response.content().text());
+      return convert2TextOutDto;
     } catch (Exception e) {
       System.out.println("Error during transcription: " + e.getMessage());
     }
-    return music2TextOutDto;
+    return convert2TextOutDto;
   }
 
-  public Resource generateImage(Music2TextOutDto textResult) throws IOException {
+  public Resource generateImage(Convert2TextOutDto textResult) throws IOException {
     final String endpoint = String.format("%s-aiplatform.googleapis.com:443", googleNormalConfig.getLocation());
     PredictionServiceSettings predictionServiceSettings =
         PredictionServiceSettings.newBuilder().setEndpoint(endpoint).build();
