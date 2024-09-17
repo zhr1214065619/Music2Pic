@@ -17,7 +17,7 @@ const TextDisplay = () => {
   return (
     <>
       <Button onClick={() => setOpen(!open)} aria-controls="example-collapse-text" aria-expanded={open}>
-        Show Text
+        { open ? "文字内容を閉じる" : "文字内容を開く"}
       </Button>
       <Collapse in={open}>
         <div id="example-collapse-text" style={{ background: '#e0e0e0' }}>
