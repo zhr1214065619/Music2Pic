@@ -1,8 +1,9 @@
-version: '3.8'
+version: '3.3'
 services:
   react-app:
+    image: music2pic-fe
     build: .
     ports:
-      - "5173:80"
+      - "80:80"
     volumes:
       - ./dist:/usr/share/nginx/html
