@@ -35,25 +35,22 @@ const initialState = {
   progress: 0,
   message: "ファイルをアップロードしてください。",
   musicFileUrl: "",
-  musicFileId: "",
   text: "",
   base64image: "",
   status: 'idle'
-} as MusicState
+} as MusicState;
 
 export const MusicSlice = createSlice({
   name: 'music',
   initialState: initialState,
   reducers: {
     refreshMusic: (state, action) => {
-      state.musicFileURL = action.payload;
+      state.musicFileUrl = action.payload;
     },
     resetProgress: (state) => {
       state.progress = 0;
       state.base64image = "";
-      URL.revokeObjectURL(state.musicFileURL);
-      state.musicFileURL = "";
-      state.musicFileId = "";
+      state.musicFileUrl = "";
       state.message = "ファイルをアップロードしてください。";
     },
     updateProgress: (state, action) => {
@@ -103,7 +100,7 @@ export const MusicSlice = createSlice({
 
 export const {
   refreshMusic,
-  resetProgress,
-  updateProgress} = MusicSlice.actions;
+  resetProgress
+} = MusicSlice.actions;
 
 export default MusicSlice.reducer;
