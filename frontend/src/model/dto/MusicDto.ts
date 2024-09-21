@@ -3,7 +3,7 @@ export interface Convert2TextOutDto {
 }
 
 export interface SaveMusicOutDto {
-  fileName: string;
+  fileUrl: string;
 }
 
 export interface Text2ImageOutDto {

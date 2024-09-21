@@ -1,15 +1,6 @@
 import http from "../../util/http";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { MusicState } from "../../model/state/MusicStateModel";
-
-// 异步获取音乐信息
-export const fetchMusic = createAsyncThunk(
-  'music/fetchMusic',
-  async (payload: { id: string }) => {
-    const response = await http.get(`/music/test`, payload);
-    return response.data;
-  }
-)
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {MusicState} from "../../model/state/MusicStateModel";
 
 export const uploadMusic = createAsyncThunk(
   'music/uploadMusic',
@@ -23,9 +14,10 @@ export const uploadMusic = createAsyncThunk(
 
 export const convert2Text = createAsyncThunk(
   'music/convert2Text',
-  async (payload: { fileId: string }) => {
+  async (payload: { fileUrl: string }) => {
+    console.log(payload.fileUrl)
     const formData = new FormData();
-    formData.append("fileId", payload.fileId);
+    formData.append("fileUrl", payload.fileUrl);
     const response = await http.post(`/music/convert2Text`, formData);
     return response.data;
   }
@@ -41,9 +33,11 @@ export const generateImage = createAsyncThunk(
 
 const initialState = {
   progress: 0,
-  message: "",
+  message: "ファイルをアップロードしてください。",
+  musicFileUrl: "",
+  musicFileId: "",
+  text: "",
   base64image: "",
-  requestTime: 0,
   status: 'idle'
 } as MusicState
 
@@ -51,8 +45,16 @@ export const MusicSlice = createSlice({
   name: 'music',
   initialState: initialState,
   reducers: {
+    refreshMusic: (state, action) => {
+      state.musicFileURL = action.payload;
+    },
     resetProgress: (state) => {
       state.progress = 0;
+      state.base64image = "";
+      URL.revokeObjectURL(state.musicFileURL);
+      state.musicFileURL = "";
+      state.musicFileId = "";
+      state.message = "ファイルをアップロードしてください。";
     },
     updateProgress: (state, action) => {
       state.progress = action.payload;
@@ -60,40 +62,47 @@ export const MusicSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMusic.pending, (state: MusicState) => {
-        // action is inferred correctly here if using TS
-        state.requestTime += 1
-      })
-      // You can chain calls, or have separate `builder.addCase()` lines each time
-      .addCase(fetchMusic.fulfilled, (state: MusicState, {payload}) => {
-        state.message = payload.message
-      })
       .addCase(uploadMusic.pending, (state: MusicState) => {
         state.progress = 1;
+        state.message = "アップロード中...";
       })
-      .addCase(uploadMusic.fulfilled, (state: MusicState) => {
+      .addCase(uploadMusic.fulfilled, (state: MusicState, {payload}) => {
         state.progress = 2;
+        state.musicFileUrl = payload.fileUrl;
+        console.log(payload.fileUrl);
+        state.message = "アップロード完了しました。画像生成してください。";
       })
       .addCase(uploadMusic.rejected, (state: MusicState) => {
         state.progress = -1;
+        state.message = "アップロード失敗しました。";
       })
-      .addCase(convert2Text.fulfilled, (state: MusicState) => {
+      .addCase(convert2Text.pending, (state: MusicState) => {
         state.progress = 3;
+        state.message = "音声分析中...";
+      })
+      .addCase(convert2Text.fulfilled, (state: MusicState, {payload}) => {
+        state.progress = 4;
+        state.text = payload.text;
+        state.message = "画像生成中...";
       })
       .addCase(convert2Text.rejected, (state: MusicState) => {
         state.progress = -1;
+        state.message = "音声分析失敗しました。";
       })
       .addCase(generateImage.fulfilled,(state: MusicState, {payload}) => {
-        state.progress = 4;
+        state.progress = 5;
         state.base64image = payload.base64Image;
+        console.log(payload);
       })
       .addCase(generateImage.rejected,(state: MusicState) => {
         state.progress = -1;
+        state.message = "画像失敗しました。";
       })
   },
 })
 
 export const {
+  refreshMusic,
   resetProgress,
   updateProgress} = MusicSlice.actions;
 

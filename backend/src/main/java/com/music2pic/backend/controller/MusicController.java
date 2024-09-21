@@ -33,8 +33,8 @@ public class MusicController {
   }
 
   @PostMapping("/convert2Text")
-  public ResponseEntity<Object> convert2Text(@RequestParam("fileId") String fileId) {
-    Convert2TextOutDto convert2TextOutDto = musicService.convert2Text(fileId);
+  public ResponseEntity<Object> convert2Text(@RequestParam("fileUrl") String fileUrl) {
+    Convert2TextOutDto convert2TextOutDto = musicService.convert2Text(fileUrl);
     return ResponseEntity.ok(ResponseBody.ok(convert2TextOutDto));
   }
 

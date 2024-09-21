@@ -67,27 +67,23 @@ public class MusicService {
 
       // 使用 Google Cloud Storage 客户端上传文件
       storage.create(blobInfo, file.getBytes());
-      saveMusicOutDto.setFileName(filename);
       System.out.println("File uploaded to bucket " + googleStorageConfig.getBucketName() + " as " + filename);
+      URL signedUrl = storage.signUrl(
+          BlobInfo.newBuilder(googleStorageConfig.getBucketName(), filename).build(),
+          20, TimeUnit.MINUTES, // URL expiration time
+          Storage.SignUrlOption.httpMethod(HttpMethod.GET) // HTTP method to be used
+      );
+      saveMusicOutDto.setFileUrl(signedUrl.toString());
     } catch (Exception e) {
       System.out.println("Error occurred: " + e.getMessage());
     }
     return saveMusicOutDto;
   }
 
-  public Convert2TextOutDto convert2Text(String fileId) {
+  public Convert2TextOutDto convert2Text(String fileUrl) {
     Convert2TextOutDto convert2TextOutDto = new Convert2TextOutDto();
-    // Initialize the storage client
-    Storage storage = StorageOptions.getDefaultInstance().getService();
-
-    URL signedUrl = storage.signUrl(
-        BlobInfo.newBuilder(googleStorageConfig.getBucketName(), fileId).build(),
-        10, TimeUnit.MINUTES, // URL expiration time
-        Storage.SignUrlOption.httpMethod(HttpMethod.GET) // HTTP method to be used
-    );
-
     // Print the signed URL (for debugging purposes)
-    System.out.println("Signed URL: " + signedUrl);
+    System.out.println("Signed URL: " + fileUrl);
 
     ChatLanguageModel model = VertexAiGeminiChatModel.builder()
                                                      .project(googleNormalConfig.getProjectId())
@@ -96,7 +92,7 @@ public class MusicService {
                                                      .build();
 
     UserMessage userMessage = UserMessage.from(
-        AudioContent.from(signedUrl.toString()),
+        AudioContent.from(fileUrl),
         TextContent.from("# Generate Song-based Picture Prompt\n"
             + "\n"
             + "## Lyrics\n"
@@ -159,9 +155,11 @@ public class MusicService {
         Map<String, Value> fieldsMap = prediction.getStructValue().getFieldsMap();
         if (fieldsMap.containsKey("bytesBase64Encoded")) {
           text2ImageOutDto.setBase64Image(fieldsMap.get("bytesBase64Encoded").getStringValue());
+          System.out.println(text2ImageOutDto.getBase64Image());
           return text2ImageOutDto;
         }
       }
+      predictionServiceClient.shutdown();
     } catch (Exception e) {
       e.printStackTrace();
     }

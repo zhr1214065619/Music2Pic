@@ -1,41 +1,24 @@
-import { useRef } from 'react';
-import Button from 'react-bootstrap/Button';
-import {uploadMusic, convert2Text, generateImage} from "../../store/modules/music.ts";
-import {useAppDispatch} from "../../store/store.ts";
-import {Convert2TextOutDto, SaveMusicOutDto} from "../../model/dto/MusicDto.ts"; // 导入Bootstrap按钮组件
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 const MusicPlayer = () => {
-  const dispatch = useAppDispatch();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.[0]) {
-      dispatch(uploadMusic({file: event.target.files[0]}))
-        .then((response) => {
-          const fileName = (response.payload as SaveMusicOutDto).fileName;
-          dispatch(convert2Text({fileId: fileName}))
-            .then((textResponse) => {
-              const prompt = (textResponse.payload as Convert2TextOutDto).text;
-              dispatch(generateImage({text: prompt}));
-            });
-        });
-    }
-  };
+  const progress = useSelector((state: RootState) => state.music.progress);
+  const musicFileUrl = useSelector((state: RootState) => state.music.musicFileUrl);
 
-  const handleClick = () => {
-    fileInputRef.current?.click();
-  };
+  if (progress < 2) {
+    return (
+      <></>
+    );
+  }
 
   return (
-    <>
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        style={{ display: 'none' }} // 隐藏原生文件输入
-      />
-      <Button onClick={handleClick} variant="primary">アップロード</Button>
-    </>
+    <AudioPlayer
+      autoPlay
+      src={musicFileUrl}
+    />
   );
 };
 

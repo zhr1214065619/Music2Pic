@@ -3,7 +3,14 @@ import { RootState } from "../../store/store";
 
 const ImageDisplay = () => {
 
+  const progress = useSelector((state: RootState) => state.music.progress);
   const imageBase64 = useSelector((state: RootState) => state.music.base64image);
+
+  if (progress < 5) {
+    return (
+      <></>
+    );
+  }
 
   return (
     <>
