@@ -2,6 +2,7 @@ package com.music2pic.backend.controller;
 
 import com.music2pic.backend.dto.ResponseBody;
 import com.music2pic.backend.dto.music.Convert2TextOutDto;
+import com.music2pic.backend.dto.music.Text2ImageOutDto;
 import java.io.IOException;
 import org.springframework.core.io.Resource;
 import com.music2pic.backend.dto.music.SaveMusicOutDto;
@@ -38,20 +39,14 @@ public class MusicController {
   }
 
   @PostMapping("/text2Image")
-  public ResponseEntity<Resource> downloadImage(@RequestBody Convert2TextOutDto requestDto) {
+  public ResponseEntity<Object> downloadImage(@RequestBody Convert2TextOutDto requestDto) {
+    Text2ImageOutDto text2ImageOutDto;
     try {
-      Resource resource = musicService.generateImage(requestDto);
-      if (resource.exists() && resource.isReadable()) {
-        return ResponseEntity.ok()
-                             .contentType(
-                                 MediaType.IMAGE_JPEG)  // You might need to adjust the content type based on the file type
-                             .header(
-                                 HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                             .body(resource);
-      }
+      text2ImageOutDto = musicService.generateImage(requestDto);
+      return ResponseEntity.ok(ResponseBody.ok(text2ImageOutDto));
     } catch (IOException e) {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.ok(ResponseBody.fail("作成エラー", 500));
     }
-    return ResponseEntity.notFound().build();
+
   }
 }

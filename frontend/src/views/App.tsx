@@ -1,53 +1,73 @@
 import { useState } from 'react';
-import viteLogo from '/vite.svg';
 import './App.css';
 import { RootState, useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
-import { fetchMusic } from "../store/modules/music";
-import AudioPlayer from 'react-h5-audio-player';
+import { updateProgress } from "../store/modules/music";
 import 'react-h5-audio-player/lib/styles.css';
+import reactLogo from '../assets/react.svg'
+import viteLogo from '/vite.svg'
+import StageBar from "./ProgressBar/ProgressBar.tsx";
+import {Button} from "react-bootstrap";
+import { Container, Row, Col, ProgressBar } from 'react-bootstrap';
+import MusicPlayer from "./MusicPlayer/MusicPlayer.tsx";
+import ImageDisplay from "./ImageDisplay/ImageDisplay.tsx";
 
 function App() {
   const dispatch = useAppDispatch();
-  const message = useSelector((state: RootState) => state.music.message);
+  const progress = useSelector((state: RootState) => state.music.progress);
   const requestTimes = useSelector((state: RootState) => state.music.requestTime);
   const [userId, setUserId] = useState("");
 
-  function handleCategChange() {
-    dispatch(fetchMusic({ id: userId }));
+  const onClick = () => {
+    const stage = Math.floor(Math.random() * 4) + 1;
+    dispatch(updateProgress(stage));
   }
-
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setUserId(event.target.value);
-  }
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <input
-          type="text"
-          value={userId}
-          onChange={handleInputChange}
-          placeholder="Enter user ID"
-        />
-        <button onClick={handleCategChange}>
-          count is {requestTimes}
-        </button>
-        <p>{message}</p>
-        <p>{userId}</p>
-      </div>
-      <AudioPlayer
-        autoPlay
-        src="http://example.com/audio.mp3"
-        onPlay={e => console.log("onPlay")}
-        // other props here
-      />
+      <h1>Music2Pic</h1>
+      <Container fluid>
+        {/* 进度条 */}
+        <Row>
+          <Col>
+            <StageBar />
+            <Button onClick={onClick}> check </Button>
+          </Col>
+        </Row>
+
+        {/* 主体布局 */}
+        <Row>
+          {/* 左侧区域 */}
+          <Col md={6}>
+            {/* 音乐播放器 */}
+            <Row>
+              <Col>
+                <div style={{ height: '30vh', background: '#f0f0f0' }}>
+                  {/* 音乐播放器组件 */}
+                  Music Player
+                  <MusicPlayer />
+                </div>
+
+              </Col>
+            </Row>
+            {/* 文本显示框 */}
+            <Row>
+              <Col>
+                <div style={{ height: '30vh', background: '#e0e0e0' }}>
+                  {/* 文本显示框组件 */}
+                  Text Display
+                </div>
+              </Col>
+            </Row>
+          </Col>
+
+          {/* 右侧区域 */}
+          <Col md={6}>
+            <div style={{ height: '60vh', background: '#d0d0d0' }}>
+              <ImageDisplay />
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 }

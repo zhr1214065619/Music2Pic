@@ -17,6 +17,7 @@ import com.music2pic.backend.common.configuration.NormalConfig;
 import com.music2pic.backend.common.configuration.StorageConfig;
 import com.music2pic.backend.dto.music.Convert2TextOutDto;
 import com.music2pic.backend.dto.music.SaveMusicOutDto;
+import com.music2pic.backend.dto.music.Text2ImageOutDto;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.AudioContent;
 import dev.langchain4j.data.message.TextContent;
@@ -56,6 +57,7 @@ public class MusicService {
       // 获取文件的 MIME 类型
       String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
       String contentType = file.getContentType();
+      System.out.println(contentType);
 
       // 创建 BlobId 对象
       BlobId blobId = BlobId.of(googleStorageConfig.getBucketName(), filename);
@@ -66,7 +68,7 @@ public class MusicService {
       // 使用 Google Cloud Storage 客户端上传文件
       storage.create(blobInfo, file.getBytes());
       saveMusicOutDto.setFileName(filename);
-      System.out.println("File uploaded to bucket " + googleStorageConfig.getBucketName() + " as " + file.getOriginalFilename());
+      System.out.println("File uploaded to bucket " + googleStorageConfig.getBucketName() + " as " + filename);
     } catch (Exception e) {
       System.out.println("Error occurred: " + e.getMessage());
     }
@@ -88,14 +90,23 @@ public class MusicService {
     System.out.println("Signed URL: " + signedUrl);
 
     ChatLanguageModel model = VertexAiGeminiChatModel.builder()
-                                                     .project(System.getenv("PROJECT_ID"))
-                                                     .location(System.getenv("LOCATION"))
+                                                     .project(googleNormalConfig.getProjectId())
+                                                     .location(googleNormalConfig.getLocation())
                                                      .modelName("gemini-1.5-pro")
                                                      .build();
 
     UserMessage userMessage = UserMessage.from(
         AudioContent.from(signedUrl.toString()),
-        TextContent.from("Please transcribe the lyrics of this song. use Japanese.")
+        TextContent.from("# Generate Song-based Picture Prompt\n"
+            + "\n"
+            + "## Lyrics\n"
+            + "Begin by analyzing the main themes and keywords from the song's lyrics. Focus on core imagery, metaphors, and specific words or phrases that paint a vivid picture (e.g., 'ocean waves,' 'fading sunset,' 'dancing in the rain').\n"
+            + "\n"
+            + "## Background Music Sentiment\n"
+            + "Capture the emotion evoked by the melody, rhythm, and instrumentation of the background music. Is it uplifting, melancholic, suspenseful, or serene? Include how the mood of the music complements or contrasts with the lyrics.\n"
+            + "\n"
+            + "## Merge and Visualize\n"
+            + "Combine the lyrical imagery with the sentiment. For example, if the lyrics are about a 'journey through a forest,' and the music evokes a feeling of suspense and tension, imagine a dense, dark forest scene at twilight, where shadows loom and mist fills the air, adding a mysterious atmosphere.")
     );
 
     try {
@@ -110,7 +121,8 @@ public class MusicService {
     return convert2TextOutDto;
   }
 
-  public Resource generateImage(Convert2TextOutDto textResult) throws IOException {
+  public Text2ImageOutDto generateImage(Convert2TextOutDto textResult) throws IOException {
+    Text2ImageOutDto text2ImageOutDto = new Text2ImageOutDto();
     final String endpoint = String.format("%s-aiplatform.googleapis.com:443", googleNormalConfig.getLocation());
     PredictionServiceSettings predictionServiceSettings =
         PredictionServiceSettings.newBuilder().setEndpoint(endpoint).build();
@@ -146,15 +158,14 @@ public class MusicService {
       for (Value prediction : predictResponse.getPredictionsList()) {
         Map<String, Value> fieldsMap = prediction.getStructValue().getFieldsMap();
         if (fieldsMap.containsKey("bytesBase64Encoded")) {
-          String bytesBase64Encoded = fieldsMap.get("bytesBase64Encoded").getStringValue();
-          byte[] imageData = Base64.getDecoder().decode(bytesBase64Encoded);
-          return new ByteArrayResource(imageData);
+          text2ImageOutDto.setBase64Image(fieldsMap.get("bytesBase64Encoded").getStringValue());
+          return text2ImageOutDto;
         }
       }
-    } catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
-    return null;
+    return text2ImageOutDto;
   }
 
   private static Value mapToValue(Map<String, Object> map) throws InvalidProtocolBufferException {
