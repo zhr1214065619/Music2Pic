@@ -38,6 +38,7 @@ instance.interceptors.response.use(
 );
 
 function handleStatus(status: number) {
+  console.log(status);
 }
 
 export interface Data {
@@ -47,27 +48,27 @@ export interface Data {
 interface Http {
   get: (
     url: string,
-    data?: Data,
+    data?: Data | FormData,
     config?: AxiosRequestConfig
   ) => Promise<Response>;
   post: (
     url: string,
-    data?: Data,
+    data?: Data | FormData,
     config?: AxiosRequestConfig
   ) => Promise<Response>;
   put: (
     url: string,
-    data?: Data,
+    data?: Data | FormData,
     config?: AxiosRequestConfig
   ) => Promise<Response>;
   patch: (
     url: string,
-    data?: Data,
+    data?: Data | FormData,
     config?: AxiosRequestConfig
   ) => Promise<Response>;
   delete: (
     url: string,
-    data?: Data,
+    data?: Data | FormData,
     config?: AxiosRequestConfig
   ) => Promise<AxiosResponse>;
 }

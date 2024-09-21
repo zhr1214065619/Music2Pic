@@ -1,22 +1,15 @@
-import { useState } from 'react';
 import './App.css';
-import { RootState, useAppDispatch } from "../store/store";
-import { useSelector } from "react-redux";
+import { useAppDispatch } from "../store/store";
 import { updateProgress } from "../store/modules/music";
 import 'react-h5-audio-player/lib/styles.css';
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
 import StageBar from "./ProgressBar/ProgressBar.tsx";
 import {Button} from "react-bootstrap";
-import { Container, Row, Col, ProgressBar } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import MusicPlayer from "./MusicPlayer/MusicPlayer.tsx";
 import ImageDisplay from "./ImageDisplay/ImageDisplay.tsx";
 
 function App() {
   const dispatch = useAppDispatch();
-  const progress = useSelector((state: RootState) => state.music.progress);
-  const requestTimes = useSelector((state: RootState) => state.music.requestTime);
-  const [userId, setUserId] = useState("");
 
   const onClick = () => {
     const stage = Math.floor(Math.random() * 4) + 1;

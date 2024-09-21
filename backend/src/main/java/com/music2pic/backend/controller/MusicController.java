@@ -47,6 +47,5 @@ public class MusicController {
     } catch (IOException e) {
       return ResponseEntity.ok(ResponseBody.fail("作成エラー", 500));
     }
-
   }
 }

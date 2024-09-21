@@ -51,7 +51,7 @@ export const MusicSlice = createSlice({
   name: 'music',
   initialState: initialState,
   reducers: {
-    resetProgress: (state, action) => {
+    resetProgress: (state) => {
       state.progress = 0;
     },
     updateProgress: (state, action) => {
@@ -60,7 +60,7 @@ export const MusicSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMusic.pending, (state: MusicState, {payload}) => {
+      .addCase(fetchMusic.pending, (state: MusicState) => {
         // action is inferred correctly here if using TS
         state.requestTime += 1
       })
@@ -68,26 +68,26 @@ export const MusicSlice = createSlice({
       .addCase(fetchMusic.fulfilled, (state: MusicState, {payload}) => {
         state.message = payload.message
       })
-      .addCase(uploadMusic.pending, (state: MusicState, {payload}) => {
+      .addCase(uploadMusic.pending, (state: MusicState) => {
         state.progress = 1;
       })
-      .addCase(uploadMusic.fulfilled, (state: MusicState, {payload}) => {
+      .addCase(uploadMusic.fulfilled, (state: MusicState) => {
         state.progress = 2;
       })
-      .addCase(uploadMusic.rejected, (state: MusicState, {payload}) => {
+      .addCase(uploadMusic.rejected, (state: MusicState) => {
         state.progress = -1;
       })
-      .addCase(convert2Text.fulfilled, (state: MusicState, {payload}) => {
+      .addCase(convert2Text.fulfilled, (state: MusicState) => {
         state.progress = 3;
       })
-      .addCase(convert2Text.rejected, (state: MusicState, {payload}) => {
+      .addCase(convert2Text.rejected, (state: MusicState) => {
         state.progress = -1;
       })
       .addCase(generateImage.fulfilled,(state: MusicState, {payload}) => {
         state.progress = 4;
         state.base64image = payload.base64Image;
       })
-      .addCase(generateImage.rejected,(state: MusicState, {payload}) => {
+      .addCase(generateImage.rejected,(state: MusicState) => {
         state.progress = -1;
       })
   },
