@@ -89,11 +89,10 @@ export const MusicSlice = createSlice({
       .addCase(generateImage.fulfilled,(state: MusicState, {payload}) => {
         state.progress = 5;
         state.base64image = payload.base64Image;
-        console.log(payload);
       })
       .addCase(generateImage.rejected,(state: MusicState) => {
         state.progress = -1;
-        state.message = "画像失敗しました。";
+        state.message = "画像生成失敗しました。";
       })
   },
 })

@@ -9,6 +9,13 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.HttpMethod;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.vertexai.VertexAI;
+import com.google.cloud.vertexai.api.Content;
+import com.google.cloud.vertexai.api.GenerateContentResponse;
+import com.google.cloud.vertexai.generativeai.ContentMaker;
+import com.google.cloud.vertexai.generativeai.GenerativeModel;
+import com.google.cloud.vertexai.generativeai.PartMaker;
+import com.google.cloud.vertexai.generativeai.ResponseHandler;
 import com.google.gson.Gson;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Value;
@@ -18,28 +25,24 @@ import com.music2pic.backend.common.configuration.StorageConfig;
 import com.music2pic.backend.dto.music.Convert2TextOutDto;
 import com.music2pic.backend.dto.music.SaveMusicOutDto;
 import com.music2pic.backend.dto.music.Text2ImageOutDto;
-import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.AudioContent;
-import dev.langchain4j.data.message.TextContent;
-import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.output.Response;
-import dev.langchain4j.model.vertexai.VertexAiGeminiChatModel;
+import com.music2pic.backend.util.FileUtils;
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Base64;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MusicService {
 
@@ -57,7 +60,6 @@ public class MusicService {
       // 获取文件的 MIME 类型
       String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
       String contentType = file.getContentType();
-      System.out.println(contentType);
 
       // 创建 BlobId 对象
       BlobId blobId = BlobId.of(googleStorageConfig.getBucketName(), filename);
@@ -67,7 +69,7 @@ public class MusicService {
 
       // 使用 Google Cloud Storage 客户端上传文件
       storage.create(blobInfo, file.getBytes());
-      System.out.println("File uploaded to bucket " + googleStorageConfig.getBucketName() + " as " + filename);
+      log.info("File uploaded to bucket: {} ", googleStorageConfig.getBucketName() + " as " + filename);
       URL signedUrl = storage.signUrl(
           BlobInfo.newBuilder(googleStorageConfig.getBucketName(), filename).build(),
           20, TimeUnit.MINUTES, // URL expiration time
@@ -75,44 +77,44 @@ public class MusicService {
       );
       saveMusicOutDto.setFileUrl(signedUrl.toString());
     } catch (Exception e) {
-      System.out.println("Error occurred: " + e.getMessage());
+      log.error("Error occurred: {}", e.getMessage());
     }
     return saveMusicOutDto;
   }
 
   public Convert2TextOutDto convert2Text(String fileUrl) {
     Convert2TextOutDto convert2TextOutDto = new Convert2TextOutDto();
-    // Print the signed URL (for debugging purposes)
-    System.out.println("Signed URL: " + fileUrl);
+    // Initialize client that will be used to send requests. This client only needs
+    // to be created once, and can be reused for multiple requests.
+    try (VertexAI vertexAI = new VertexAI(googleNormalConfig.getProjectId(), googleNormalConfig.getLocation())) {
+      GenerativeModel model = new GenerativeModel("gemini-1.5-pro", vertexAI);
 
-    ChatLanguageModel model = VertexAiGeminiChatModel.builder()
-                                                     .project(googleNormalConfig.getProjectId())
-                                                     .location(googleNormalConfig.getLocation())
-                                                     .modelName("gemini-1.5-pro")
-                                                     .build();
+      String prompt = """
+          # Task: Generate Image-generation prompt from Audio.
+          Please Generate Image-generation prompt from Audio with below point. 
+          **ONLY GENERATE PROMPT**
+          Please also avoid the limit of model "imagen-3.0-generate-001", like child image or violence context.
+          ## Lyrics
+          Begin by analyzing the main themes and keywords from the song's lyrics. Focus on core imagery, metaphors, and specific words or phrases that paint a vivid picture (e.g., 'ocean waves,' 'fading sunset,' 'dancing in the rain').
+          ## Background Music Sentiment
+          Capture the emotion evoked by the melody, rhythm, and instrumentation of the background music. Is it uplifting, melancholic, suspenseful, or serene? Include how the mood of the music complements or contrasts with the lyrics.
+          ## Merge and Visualize
+          Combine the lyrical imagery with the sentiment. For example, if the lyrics are about a 'journey through a forest,' and the music evokes a feeling of suspense and tension, imagine a dense, dark forest scene at twilight, where shadows loom and mist fills the air, adding a mysterious atmosphere.
+          """;
 
-    UserMessage userMessage = UserMessage.from(
-        AudioContent.from(fileUrl),
-        TextContent.from("# Generate Song-based Picture Prompt\n"
-            + "\n"
-            + "## Lyrics\n"
-            + "Begin by analyzing the main themes and keywords from the song's lyrics. Focus on core imagery, metaphors, and specific words or phrases that paint a vivid picture (e.g., 'ocean waves,' 'fading sunset,' 'dancing in the rain').\n"
-            + "\n"
-            + "## Background Music Sentiment\n"
-            + "Capture the emotion evoked by the melody, rhythm, and instrumentation of the background music. Is it uplifting, melancholic, suspenseful, or serene? Include how the mood of the music complements or contrasts with the lyrics.\n"
-            + "\n"
-            + "## Merge and Visualize\n"
-            + "Combine the lyrical imagery with the sentiment. For example, if the lyrics are about a 'journey through a forest,' and the music evokes a feeling of suspense and tension, imagine a dense, dark forest scene at twilight, where shadows loom and mist fills the air, adding a mysterious atmosphere.")
-    );
+      Content content = ContentMaker.fromMultiModalData(
+          PartMaker.fromMimeTypeAndData(FileUtils.getMimeTypeFromURL(fileUrl), FileUtils.getDataFromURL(fileUrl)),
+          prompt
+      );
+      log.info(FileUtils.getMimeTypeFromURL(fileUrl));
 
-    try {
-      Response<AiMessage> response = model.generate(userMessage);
-      System.out.println("Transcribed Text:");
-      System.out.println(response.content().text());
-      convert2TextOutDto.setText(response.content().text());
-      return convert2TextOutDto;
+      GenerateContentResponse response = model.generateContent(content);
+
+      String output = ResponseHandler.getText(response);
+      convert2TextOutDto.setText(output);
+      log.info("Transcribed Text: {}", output);
     } catch (Exception e) {
-      System.out.println("Error during transcription: " + e.getMessage());
+      log.error("Error during transcription: {}", e.getMessage());
     }
     return convert2TextOutDto;
   }
@@ -155,13 +157,14 @@ public class MusicService {
         Map<String, Value> fieldsMap = prediction.getStructValue().getFieldsMap();
         if (fieldsMap.containsKey("bytesBase64Encoded")) {
           text2ImageOutDto.setBase64Image(fieldsMap.get("bytesBase64Encoded").getStringValue());
-          System.out.println(text2ImageOutDto.getBase64Image());
+          log.info("Generated Image.");
           return text2ImageOutDto;
         }
       }
+
       predictionServiceClient.shutdown();
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage());
     }
     return text2ImageOutDto;
   }
