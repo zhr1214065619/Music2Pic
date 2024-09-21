@@ -1,6 +1,7 @@
 package com.music2pic.backend.common.cors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -51,7 +52,7 @@ public class CorsConfig implements WebMvcConfigurer {
     configuration.setAllowedOrigins(origins);
     configuration.setAllowedMethods(methods);
     configuration.setAllowCredentials(true);
-    configuration.setAllowedHeaders(allowedHeaders);
+    configuration.setAllowedHeaders(Collections.singletonList("*"));
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
