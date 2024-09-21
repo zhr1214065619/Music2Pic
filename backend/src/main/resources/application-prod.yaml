@@ -12,4 +12,9 @@ cors:
     - Authorization
     - Cache-Control
     - Content-Type
-    - Access-Control-Allow-Headers
+    - User-Agent
+    - Accept
+    - Origin
+    - Cache-Control
+    - X-Requested-With
+    - Access-Control-Allow-Origin

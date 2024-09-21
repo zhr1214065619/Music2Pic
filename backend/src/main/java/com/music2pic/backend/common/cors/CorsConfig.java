@@ -52,7 +52,7 @@ public class CorsConfig implements WebMvcConfigurer {
     configuration.setAllowedOrigins(origins);
     configuration.setAllowedMethods(methods);
     configuration.setAllowCredentials(true);
-    configuration.setAllowedHeaders(Collections.singletonList("*"));
+    configuration.setAllowedHeaders(allowedHeaders);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
