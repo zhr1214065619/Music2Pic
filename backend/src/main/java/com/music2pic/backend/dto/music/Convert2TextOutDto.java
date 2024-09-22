@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class Convert2TextOutDto {
-  private String text;
+  private String prompt;
+  private String analyzeResult;
 }

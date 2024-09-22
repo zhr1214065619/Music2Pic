@@ -17,6 +17,7 @@ const MusicPlayer = () => {
   return (
     <AudioPlayer
       autoPlay
+      volume={0.5}
       src={musicFileUrl}
     />
   );

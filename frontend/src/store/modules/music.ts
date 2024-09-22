@@ -25,7 +25,7 @@ export const convert2Text = createAsyncThunk(
 
 export const generateImage = createAsyncThunk(
   'music/text2Image',
-  async (payload: { text: string }) => {
+  async (payload: {prompt: string, analyzeResult: string}) => {
     const response = await http.post(`/music/text2Image`, payload);
     return response.data;
   }
@@ -33,9 +33,10 @@ export const generateImage = createAsyncThunk(
 
 const initialState = {
   progress: 0,
-  message: "ファイルをアップロードしてください。",
+  message: "音楽ファイルをアップロードしてください。",
   musicFileUrl: "",
   text: "",
+  showText: false,
   base64image: "",
   status: 'idle'
 } as MusicState;
@@ -44,6 +45,9 @@ export const MusicSlice = createSlice({
   name: 'music',
   initialState: initialState,
   reducers: {
+    changeShowText: (state) => {
+      state.showText = !state.showText;
+    },
     refreshMusic: (state, action) => {
       state.musicFileUrl = action.payload;
     },
@@ -51,7 +55,7 @@ export const MusicSlice = createSlice({
       state.progress = 0;
       state.base64image = "";
       state.musicFileUrl = "";
-      state.message = "ファイルをアップロードしてください。";
+      state.message = "音楽ファイルをアップロードしてください。";
     },
     updateProgress: (state, action) => {
       state.progress = action.payload;
@@ -79,7 +83,7 @@ export const MusicSlice = createSlice({
       })
       .addCase(convert2Text.fulfilled, (state: MusicState, {payload}) => {
         state.progress = 4;
-        state.text = payload.text;
+        state.text = payload.analyzeResult;
         state.message = "画像生成中...";
       })
       .addCase(convert2Text.rejected, (state: MusicState) => {
@@ -89,6 +93,7 @@ export const MusicSlice = createSlice({
       .addCase(generateImage.fulfilled,(state: MusicState, {payload}) => {
         state.progress = 5;
         state.base64image = payload.base64Image;
+        state.message = "画像生成完了しました。";
       })
       .addCase(generateImage.rejected,(state: MusicState) => {
         state.progress = -1;
@@ -98,6 +103,7 @@ export const MusicSlice = createSlice({
 })
 
 export const {
+  changeShowText,
   refreshMusic,
   resetProgress
 } = MusicSlice.actions;

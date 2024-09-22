@@ -1,30 +1,22 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { Button, Collapse } from "react-bootstrap";
-import { useState } from "react";
+import Markdown from 'react-markdown'
 
 const TextDisplay = () => {
   const progress = useSelector((state: RootState) => state.music.progress);
   const textInfo = useSelector((state: RootState) => state.music.text);
-  const [open, setOpen] = useState(false);
+  const showText = useSelector((state: RootState) => state.music.showText);
 
-  if (progress < 5) {
+  if (progress == 5 && showText) {
     return (
-      <></>
+      <div style={{ textAlign: "left", height: "50vh", overflow: "auto"}}>
+        <Markdown>{textInfo}</Markdown>
+      </div>
     );
   }
 
   return (
-    <>
-      <Button onClick={() => setOpen(!open)} aria-controls="example-collapse-text" aria-expanded={open}>
-        { open ? "文字内容を閉じる" : "文字内容を開く"}
-      </Button>
-      <Collapse in={open}>
-        <div id="example-collapse-text" style={{ background: '#e0e0e0' }}>
-          {textInfo}
-        </div>
-      </Collapse>
-    </>
+    <></>
   );
 };
 

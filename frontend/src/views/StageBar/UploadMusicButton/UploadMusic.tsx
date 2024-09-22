@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import Button from 'react-bootstrap/Button';
-import {refreshMusic, uploadMusic} from "../../../store/modules/music.ts";
-import {useAppDispatch} from "../../../store/store.ts";
+import { refreshMusic, uploadMusic } from "../../../store/modules/music.ts";
+import { useAppDispatch } from "../../../store/store.ts";
 
 const UploadMusicButton = () => {
   const dispatch = useAppDispatch();
@@ -10,7 +10,7 @@ const UploadMusicButton = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.[0]) {
       dispatch(refreshMusic(URL.createObjectURL(event.target.files?.[0])));
-      dispatch(uploadMusic({file: event.target.files?.[0]}));
+      dispatch(uploadMusic({ file: event.target.files?.[0] }));
     }
   };
 
@@ -25,8 +25,11 @@ const UploadMusicButton = () => {
         ref={fileInputRef}
         onChange={handleFileChange}
         style={{ display: 'none' }} // 隐藏原生文件输入
+        accept=".mp3, .wav, .ogg, .flac" // 只接受常见的音频格式
       />
-      <Button onClick={handleClick} variant="primary" style={{ marginRight: "20px" }}>アップロード</Button>
+      <Button onClick={handleClick} variant="dark">
+        アップロード
+      </Button>
     </>
   );
 };

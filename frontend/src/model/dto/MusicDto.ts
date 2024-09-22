@@ -1,5 +1,6 @@
 export interface Convert2TextOutDto {
-  text: string;
+  prompt: string;
+  analyzeResult: string;
 }
 
 export interface SaveMusicOutDto {

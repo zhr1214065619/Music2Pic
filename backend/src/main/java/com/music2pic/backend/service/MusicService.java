@@ -26,13 +26,10 @@ import com.music2pic.backend.dto.music.Convert2TextOutDto;
 import com.music2pic.backend.dto.music.SaveMusicOutDto;
 import com.music2pic.backend.dto.music.Text2ImageOutDto;
 import com.music2pic.backend.util.FileUtils;
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -89,11 +86,15 @@ public class MusicService {
     try (VertexAI vertexAI = new VertexAI(googleNormalConfig.getProjectId(), googleNormalConfig.getLocation())) {
       GenerativeModel model = new GenerativeModel("gemini-1.5-pro", vertexAI);
 
-      String prompt = """
+      // generate prompt for image.
+      String prompt4Image = """
           # Task: Generate Image-generation prompt from Audio.
-          Please Generate Image-generation prompt from Audio with below point. 
-          **ONLY GENERATE PROMPT**
-          Please also avoid the limit of model "imagen-3.0-generate-001", like child image or violence context.
+          Please Generate Image-generation prompt from Audio with below point.
+          # RULE:
+          1. **IMPORTANT: ONLY GENERATE PROMPT.**
+          2. The prompt should be weaken the presence of characters and try to make it a landscape picture that expresses emotions and atmosphere.
+          3. Avoid Sexual, Toxic, Toxic and Vulgar in your generation.
+          # Generate Point(What should be consider)
           ## Lyrics
           Begin by analyzing the main themes and keywords from the song's lyrics. Focus on core imagery, metaphors, and specific words or phrases that paint a vivid picture (e.g., 'ocean waves,' 'fading sunset,' 'dancing in the rain').
           ## Background Music Sentiment
@@ -102,17 +103,37 @@ public class MusicService {
           Combine the lyrical imagery with the sentiment. For example, if the lyrics are about a 'journey through a forest,' and the music evokes a feeling of suspense and tension, imagine a dense, dark forest scene at twilight, where shadows loom and mist fills the air, adding a mysterious atmosphere.
           """;
 
-      Content content = ContentMaker.fromMultiModalData(
+      Content content4Image = ContentMaker.fromMultiModalData(
           PartMaker.fromMimeTypeAndData(FileUtils.getMimeTypeFromURL(fileUrl), FileUtils.getDataFromURL(fileUrl)),
-          prompt
+          prompt4Image
       );
-      log.info(FileUtils.getMimeTypeFromURL(fileUrl));
 
-      GenerateContentResponse response = model.generateContent(content);
+      GenerateContentResponse response4Image = model.generateContent(content4Image);
+      // generate prompt for analyze
+      String prompt4Analyze = """
+          # Task: Analyze the Audio.
+          Please Describe the story in the given audio by below points in **Japanese** and use Markdown to response (DO NOT USE LEVEL1 OR LEVEL2 title).
+          # Generate Point(What should be consider)
+          ## Lyrics
+          Begin by analyzing the main themes and keywords from the song's lyrics. Focus on core imagery, metaphors, and specific words or phrases that paint a vivid picture (e.g., 'ocean waves,' 'fading sunset,' 'dancing in the rain').
+          ## Background Music Sentiment
+          Capture the emotion evoked by the melody, rhythm, and instrumentation of the background music. Is it uplifting, melancholic, suspenseful, or serene? Include how the mood of the music complements or contrasts with the lyrics.
+          ## Merge and Visualize
+          Combine the lyrical imagery with the sentiment. For example, if the lyrics are about a 'journey through a forest,' and the music evokes a feeling of suspense and tension, imagine a dense, dark forest scene at twilight, where shadows loom and mist fills the air, adding a mysterious atmosphere.
+          """;
 
-      String output = ResponseHandler.getText(response);
-      convert2TextOutDto.setText(output);
-      log.info("Transcribed Text: {}", output);
+      Content content4Analyze = ContentMaker.fromMultiModalData(
+          PartMaker.fromMimeTypeAndData(FileUtils.getMimeTypeFromURL(fileUrl), FileUtils.getDataFromURL(fileUrl)),
+          prompt4Analyze
+      );
+
+      GenerateContentResponse response4Analyze = model.generateContent(content4Analyze);
+
+      String prompt = ResponseHandler.getText(response4Image);
+      String analyze = ResponseHandler.getText(response4Analyze);
+      convert2TextOutDto.setPrompt(prompt);
+      convert2TextOutDto.setAnalyzeResult(analyze);
+      log.info("Transcribed Text: {}", prompt);
     } catch (Exception e) {
       log.error("Error during transcription: {}", e.getMessage());
     }
@@ -136,7 +157,7 @@ public class MusicService {
               googleNormalConfig.getProjectId(), googleNormalConfig.getLocation(), "google", "imagen-3.0-generate-001");
 
       Map<String, Object> instancesMap = new HashMap<>();
-      instancesMap.put("prompt", textResult.getText());
+      instancesMap.put("prompt", textResult.getPrompt());
       Value instances = mapToValue(instancesMap);
 
       Map<String, Object> paramsMap = new HashMap<>();

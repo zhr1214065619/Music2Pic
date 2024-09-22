@@ -1,8 +1,6 @@
 cors:
   origins:
-    - http://34.160.3.122
-    - http://127.0.0.1:5173
-    - https://music2pic-fe-557091270426.asia-northeast1.run.app
+    - https://music2pics.com/
   methods:
     - GET
     - POST

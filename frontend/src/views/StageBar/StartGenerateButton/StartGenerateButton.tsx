@@ -12,15 +12,14 @@ const UploadMusicButton = () => {
     if (musicFileUrl) {
       dispatch(convert2Text({fileUrl: musicFileUrl}))
         .then((textResponse) => {
-          const prompt = (textResponse.payload as Convert2TextOutDto).text;
-          dispatch(generateImage({text: prompt}));
+          dispatch(generateImage(textResponse.payload as Convert2TextOutDto));
         });
     }
   };
 
   return (
     <>
-      <Button onClick={handleClick} variant="primary">画像生成</Button>
+      <Button onClick={handleClick} variant="dark" style={{ marginRight: "10px"}}>画像生成</Button>
     </>
   );
 };
