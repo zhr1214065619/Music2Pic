@@ -1,7 +1,6 @@
 body, html {
   font-family: 'Arial', sans-serif;
   color: #333;
-  background-color: #ffe7cb;
   min-height: 100%;
   margin: 0;
   padding: 0;
@@ -18,6 +17,14 @@ h1 {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+/* 响应式调整：在屏幕宽度小于或等于768px时，#root 宽度调整为100% */
+@media (max-width: 768px) {
+  #root {
+    width: 100%;
+    padding: 1rem; /* 可以调整padding以适应更小的屏幕 */
+  }
 }
 
 .content-box {
